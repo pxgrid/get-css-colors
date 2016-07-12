@@ -17,11 +17,17 @@ module.exports = function getCssColors(string) {
   var hexRegex = '#([a-f]|[A-F]|[0-9]){3}(([a-f]|[A-F]|[0-9]){3})?\\b'
 
   var cssColorRegex = new RegExp(
+    '[\\s\'":]+(' +
     colorListRegex + '|' +
     rgbOrRgbaRegex + '|' +
     hslOrHslaRegex + '|' +
-    hexRegex, 'ig'
+    hexRegex + ')[\\s\'";]+'
+    , 'ig'
   )
 
-  return string.match(cssColorRegex)
+  var matched = string.match(cssColorRegex)
+  
+  return matched ? matched.map(function(color) {
+      return color.replace(cssColorRegex, '$1')
+    }) : matched
 }
